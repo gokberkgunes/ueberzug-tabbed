@@ -1,5 +1,3 @@
-# Überzug
-
 # Ueberzug-Tabbed
 
 ueberzug-tabbed is a fork of ueberzug that works with tabbed
@@ -8,16 +6,19 @@ it draws images on terminals by using child windows.
 Support for tabbed is done by force appending PID and WID of
 the current process to the dict of PIDs and WIDs.
 
-Installing instructions:
-Use sudo if not using doas.
-```
+## Installing Instructions
+Root user:
+```shell
 umask 022
-./setup.py build
-doas rm -r /usr/lib/python3.10/site-packages/ueberzug*
-doas ./setup.py install
-cd /usr/lib/python3.10/site-packages/ueberzug-18.1.9-py3.10-linux-x86_64.egg
-doas mv ueberzug .. && doas mv EGG-INFO/* . && doas rmdir EGG-INFO
-cd .. && doas mv ueberzug-18.1.9-py3.10-linux-x86_64.egg ueberzug-18.1.9-py3.10.egg-info
+git clone "https://github.com/gokberkgunes/ueberzug-tabbed.git"
+cd ueberzug-tabbed
+doas python -m pip install . || sudo python -m pip install .
+```
+Local user:
+```shell
+git clone "https://github.com/gokberkgunes/ueberzug-tabbed.git"
+cd ueberzug-tabbed
+python -m pip install .
 ```
 
 Advantages to w3mimgdisplay:
