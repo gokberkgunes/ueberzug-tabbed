@@ -194,7 +194,7 @@ Display_get_window_pid(DisplayObject *self, PyObject *args, PyObject *kwds) {
     }
 
     XFree(client_ids);
-    
+
     if (window_creator_pid != INVALID_PID) {
         return Py_BuildValue("i", window_creator_pid);
     }
