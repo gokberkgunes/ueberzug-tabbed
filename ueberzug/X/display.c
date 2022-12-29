@@ -154,8 +154,6 @@ Display_get_child_window_ids(DisplayObject *self, PyObject *args, PyObject *kwds
             PyList_Append(child_ids, py_window_id);
             Py_XDECREF(py_window_id);
         }
-
-        fprintf(stderr, "\n");
         XFree(children);
     }
 
