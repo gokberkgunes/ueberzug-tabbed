@@ -127,10 +127,6 @@ def get_parent_window_infos(display: X.Display):
 
     if client_pids:
         pid_window_id_map = get_pid_window_id_map(display)
-        # Insert current window's PID & WID to the end of map to support tabbed.
-        # NOTE: Terminal (current window) must have WINDOWID as env. variable.
-        if (os.environ.get('WINDOWID') != None):
-            pid_window_id_map[os.getpid()] = int(os.environ.get('WINDOWID'))
 
         for pid in client_pids:
             ppids = get_parent_pids(pid)
