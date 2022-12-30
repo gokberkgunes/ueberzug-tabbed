@@ -3,7 +3,6 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/XRes.h>
 #include <X11/extensions/XShm.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "util.h"
