@@ -6,7 +6,7 @@ it draws images on terminals by using child windows.
 Support for tabbed is done by force appending PID and WID of
 the current process to the dict of PIDs and WIDs.
 <p align="center">
-<img src="https://user-images.githubusercontent.com/96139011/209940647-b94d1895-9569-49a6-9824-f42c726d719a.png" alt="Ueberzug-tabed on lf, multiple tabs open."> 
+<img src="https://user-images.githubusercontent.com/96139011/209940647-b94d1895-9569-49a6-9824-f42c726d719a.png" alt="Ueberzug-tabed on lf, multiple tabs open.">
 </p>
 
 
@@ -27,6 +27,10 @@ git clone "https://github.com/gokberkgunes/ueberzug-tabbed.git"
 cd ueberzug-tabbed
 python -m pip install .
 ```
+*NOTE:* One may need to call above `pip install` commands as
+`pip install--break-system-packages` to successfully install the packages.
+
+
 
 ## Advantages to w3mimgdisplay:
 - no race conditions as a new window is created to display images
