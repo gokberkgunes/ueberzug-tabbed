@@ -27,10 +27,8 @@ git clone "https://github.com/gokberkgunes/ueberzug-tabbed.git"
 cd ueberzug-tabbed
 python -m pip install .
 ```
-*NOTE:* One may need to call above `pip install` commands as
-`pip install--break-system-packages` to successfully install the packages.
-
-
+**NOTE:** One may need to call above `pip install` commands as
+`pip install --break-system-packages` to successfully install the packages.
 
 ## Advantages to w3mimgdisplay:
 - no race conditions as a new window is created to display images
