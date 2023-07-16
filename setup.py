@@ -1,15 +1,76 @@
 #!/usr/bin/env python3
 import distutils.core
-import setuptools
-import glob
+import sys
+import os
+import subprocess
+import pprint
 
 import ueberzug
+
+from setuptools import setup, Extension, find_packages
+from setuptools.command.build_ext import build_ext
 # To use a consistent encoding
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 
-setuptools.setup(
+# Filename for the C extension module library
+c_module_name = 'ueberzug.X'
+
+# Command line flags forwarded to CMake (for debug purpose)
+cmake_cmd_args = []
+for f in sys.argv:
+    if f.startswith('-D'):
+        cmake_cmd_args.append(f)
+
+for f in cmake_cmd_args:
+    sys.argv.remove(f)
+
+
+def _get_env_variable(name, default='OFF'):
+    if name not in os.environ.keys():
+        return default
+    return os.environ[name]
+
+
+class CMakeExtension(Extension):
+    def __init__(self, name, cmake_lists_dir='.', sources=[], **kwa):
+        Extension.__init__(self, name, sources=sources, **kwa)
+        self.cmake_lists_dir = os.path.abspath(cmake_lists_dir)
+
+class CMakeBuild(build_ext):
+    def build_extensions(self):
+        try:
+            out = subprocess.check_output(['cmake', '--version'])
+        except OSError:
+            raise RuntimeError('Cannot find CMake executable')
+
+        for ext in self.extensions:
+
+            extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+            cfg = 'Debug' if _get_env_variable('UEBERZUG_DEBUG') == 'ON' else 'Release'
+
+            cmake_args = [
+                '-DCMAKE_BUILD_TYPE=%s' % cfg,
+                '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir),
+                '-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), self.build_temp),
+                '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
+            ]
+
+            cmake_args += cmake_cmd_args
+
+            pprint.pprint(cmake_args)
+
+            if not os.path.exists(self.build_temp):
+                os.makedirs(self.build_temp)
+
+            # Config and build the extension
+            subprocess.check_call(['cmake', ext.cmake_lists_dir] + cmake_args,
+                                  cwd=self.build_temp)
+            subprocess.check_call(['cmake', '--build', '.', '--config', cfg],
+                                  cwd=self.build_temp)
+
+setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
     # users can install this project, e.g.:
@@ -24,7 +85,7 @@ setuptools.setup(
     name='ueberzug',  # Required
     license=ueberzug.__license__,
 
-    include_package_data=True,
+    #include_package_data=True,
     package_data={
         '': ['*.sh'],
     },
@@ -33,13 +94,8 @@ setuptools.setup(
             'ueberzug=ueberzug.__main__:main'
         ]
     },
-    ext_modules=[
-        distutils.core.Extension(
-            "ueberzug.X",
-            glob.glob("ueberzug/X/*.c"),
-            libraries=["X11", "Xext", "XRes"],
-            include_dirs=["ueberzug/X"]),
-    ],
+    ext_modules=[CMakeExtension(c_module_name)],
+    cmdclass={'build_ext': CMakeBuild},
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -92,7 +148,7 @@ setuptools.setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=setuptools.find_packages(),  # Required
+    packages=find_packages(),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
