@@ -19,7 +19,7 @@ Root user:
 umask 022
 git clone "https://github.com/gokberkgunes/ueberzug-tabbed.git"
 cd ueberzug-tabbed
-doas python -m pip install . || sudo python -m pip install .
+doas python -m pip install --break-system-packages . || sudo python -m pip install --break-system-packages .
 ```
 Local user:
 ```shell
