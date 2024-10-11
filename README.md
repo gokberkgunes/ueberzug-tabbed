@@ -14,6 +14,9 @@ the current process to the dict of PIDs and WIDs.
 
 
 ## Installing Instructions
+Please be sure that you have `libxres` installed on your computer before
+following below direcitons.
+
 Root user:
 ```shell
 umask 022
